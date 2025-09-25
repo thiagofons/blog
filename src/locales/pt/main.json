@@ -1,0 +1,44 @@
+{
+    "head": {
+        "title": "Início | thiagofons",
+        "description": "Um blog sobre engenharia de software e estratégia de produto. Aprenda a construir software de alta qualidade que gera resultados de negócio.",
+        "keywords": "engenharia de software, arquitetura de software, frontend, desenvolvimento web, estratégia de produto, thiago fons, blog de tecnologia"
+    },
+    "hero": {
+        "title": "Engenharia de Software. <br /> Com uma visão de produto.",
+        "slogan": "Onde tecnologia encontra a estratégia de produto. Um blog sobre como construir software de alta qualidade que gera resultados de negócio reais.",
+        "cta": {
+            "blog": "Explorar Artigos",
+            "about": "Sobre Mim"
+        }
+    },
+    "manifesto": {
+        "title": "Olá, eu sou o Thiago. E este não é só mais um blog de tecnologia.",
+        "paragraphs": [
+            "No mercado atual, não basta apenas escrever código. As empresas mais inovadoras precisam de engenheiros que pensem como donos de produto: que entendam o <em>porquê</em> por trás do <em>o quê</em> e saibam como as decisões técnicas impactam o crescimento do negócio.",
+            "Eu criei este espaço para compartilhar o que aprendi construindo e escalando produtos digitais, conectando a teoria da engenharia com a prática do mercado."
+        ]
+    },
+    "pillars": {
+        "title": "Tópicos Principais",
+        "list": [
+            {
+                "title": "Arquitetura de Software",
+                "description": "Padrões e práticas para criar sistemas robustos, escaláveis e fáceis de manter."
+            },
+            {
+                "title": "Engenharia de Frontend",
+                "description": "Como construir interfaces rápidas, acessíveis e que proporcionem uma experiência de usuário memorável."
+            },
+            {
+                "title": "Estratégia de Produto",
+                "description": "A conexão crucial entre as decisões de engenharia e os objetivos de negócio."
+            }
+        ]
+    },
+    "featured": {
+        "title": "Artigos Recentes",
+        "description": "Explore as últimas discussões e tutoriais sobre o universo do desenvolvimento de software.",
+        "cta": "Ver todos os posts"
+    }
+}

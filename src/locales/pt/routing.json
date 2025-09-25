@@ -1,0 +1,30 @@
+{
+    "head": {
+        "title": "Roteamento Dinâmico",
+        "description": "Exemplos de roteamento dinâmico com diferentes estruturas de arquivos no projeto Astro.",
+        "keywords": "roteamento dinâmico Astro, parâmetros rest, roteamento aninhado, roteamento i18n, URLs multilíngues, getStaticPaths, estrutura de arquivos"
+    },
+    "title": "Roteamento Dinâmico",
+    "description": "Aqui você pode explorar diferentes maneiras de implementar roteamento dinâmico com parâmetros rest e pastas aninhadas.",
+    "link": "Abrir página",
+    "subpages": {
+        "subpage-1": {
+            "head": {
+                "title": "Roteamento Dinâmico - Serviço 1",
+                "description": "Exemplo de implementação de roteamento dinâmico com suporte a i18n para sites multilíngues",
+                "keywords": "roteamento dinâmico Astro, parâmetros rest, roteamento aninhado, roteamento i18n, URLs multilíngues, getStaticPaths, estrutura de arquivos"
+            },
+            "title": "Parâmetros Rest [...subpage1].astro",
+            "description": "Esta subpágina demonstra a implementação de roteamento dinâmico em um projeto Astro com internacionalização. Usa a estrutura de URL <span>/dynamic-routing/subpage-1</span> para inglês, que é automaticamente convertida para a versão em esloveno <span>/sl/dinamicno-usmerjanje/podstran-1</span>. Abaixo você pode ver o código real que habilita essa funcionalidade."
+        },
+        "subpage-2": {
+            "head": {
+                "title": "Roteamento Dinâmico - Subpágina 2",
+                "description": "Exemplo de implementação de roteamento dinâmico com suporte a i18n para sites multilíngues",
+                "keywords": "roteamento dinâmico Astro, parâmetros rest, roteamento aninhado, roteamento i18n, URLs multilíngues, getStaticPaths, estrutura de arquivos"
+            },
+            "title": "Roteamento Aninhado [subpage2]/[...index].astro",
+            "description": "Esta subpágina demonstra a implementação de roteamento dinâmico em um projeto Astro com internacionalização. Usa a estrutura de URL <span>/dynamic-routing/subpage-2</span> para inglês, que é automaticamente convertida para a versão em esloveno <span>/sl/dinamicno-usmerjanje/podstran-2</span>. Abaixo você pode ver o código real que habilita essa funcionalidade."
+        }
+    }
+}

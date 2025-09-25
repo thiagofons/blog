@@ -1,0 +1,106 @@
+---
+// Imports - permanecem os mesmos
+import { defaultLang, showDefaultLang } from "@i18n/ui";
+import {
+buildLocalizedStaticPaths,
+useTranslatedPath,
+useTranslations,
+} from "@i18n/utils";
+import Base from "@layouts/Base.astro";
+
+// getStaticPaths - permanece o mesmo
+export function getStaticPaths() {
+    const entries = buildLocalizedStaticPaths("/", ["...index"]);
+    if (showDefaultLang) {
+        const translatePath = useTranslatedPath(defaultLang as any);
+        const target = translatePath("/");
+        entries.push({
+            params: { index: "/" },
+            props: { lang: defaultLang, redirectTo: target },
+        } as any);
+    }
+    return entries;
+}
+
+// Props e Redirect - permanecem os mesmos
+const { lang, redirectTo } = Astro.props;
+if (redirectTo) {
+    return Astro.redirect(redirectTo);
+}
+
+// Translations
+const t = useTranslations(lang);
+const translatedPath = useTranslatedPath(lang);
+---
+
+<Base
+    title={t("main:head.title")}
+    meta={{
+        description: t("main:head.description"),
+        keywords: t("main:head.keywords"),
+    }}
+>
+    <section class="text-center py-16 md:py-24">
+        <h1
+            class="text-4xl md:text-6xl font-black mb-4"
+            set:html={t("main:hero.title")}
+        />
+        <p class="text-xl md:text-2xl text-main/80 max-w-3xl mx-auto">
+            {t("main:hero.slogan")}
+        </p>
+        <div class="mt-8 flex flex-wrap justify-center gap-4">
+            <a
+                href={translatedPath("/blog")}
+                class="button-primary"
+            >
+                {t("main:hero.cta.blog")}
+            </a>
+            <a
+                href={translatedPath("/sobre")}
+                class="button-secondary"
+            >
+                {t("main:hero.cta.about")}
+            </a>
+        </div>
+    </section>
+
+    <hr aria-hidden="true" />
+
+    <section class="py-12 md:py-16 max-w-prose mx-auto">
+        <h2 class="text-3xl font-bold mb-6">{t("main:manifesto.title")}</h2>
+        {
+            t("main:manifesto.paragraphs").map((p) => (
+                <p class="text-lg mb-6 text-main/90" style="line-height: 1.7;" set:html={p} />
+            ))
+        }
+    </section>
+
+    <hr aria-hidden="true" />
+
+    <section class="py-12 md:py-16">
+        <div class="max-w-prose mx-auto text-center">
+             <h2 class="text-3xl font-bold mb-8">{t("main:pillars.title")}</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {
+                t("main:pillars.list").map((pillar) => (
+                    <div class="border border-black/10 rounded-xl p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2">{pillar.title}</h3>
+                        <p class="text-main/80">{pillar.description}</p>
+                    </div>
+                ))
+            }
+        </div>
+    </section>
+
+    <section class="py-12 md:py-16 text-center">
+        <h2 class="text-3xl font-bold mb-8">{t("main:featured.title")}</h2>
+        <p class="text-lg text-main/80 mb-6">
+            {t("main:featured.description")}
+        </p>
+        <a href={translatedPath("/blog")} class="button-primary">
+            {t("main:featured.cta")}
+        </a>
+    </section>
+
+</Base>

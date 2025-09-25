@@ -1,0 +1,25 @@
+{
+    "head": {
+        "title": "Blog",
+        "description": "Exemplo de página de blog",
+        "keywords": "blog, artigos, posts, paginação, blog multilíngue, blog Astro, desenvolvimento web, gerenciamento de conteúdo"
+    },
+    "title": "Blog",
+    "description": "Exemplo de posts do blog",
+    "descriptionPagination": "Exemplo de posts do blog paginados",
+    "readMore": "Leia mais",
+    "noPosts": "Nenhum post do blog disponível no momento.",
+    "totalPosts": "Total de {{count}} posts",
+    "paginationExample": "Exemplo de paginação",
+    "pagination": {
+        "label": "Navegação de página",
+        "previous": "Anterior",
+        "next": "Próximo",
+        "previousPage": "Ir para a página anterior",
+        "nextPage": "Ir para a próxima página",
+        "noPreviousPage": "Nenhuma página anterior disponível",
+        "noNextPage": "Nenhuma próxima página disponível",
+        "currentPage": "Página atual {{page}}",
+        "pageOf": "Página {{current}} de {{lastPage}}"
+    }
+}

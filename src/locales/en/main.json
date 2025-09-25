@@ -1,0 +1,44 @@
+{
+    "head": {
+        "title": "Home | thiagofons",
+        "description": "A blog about software engineering and product strategy. Learn how to build high-quality software that drives business results.",
+        "keywords": "software engineering, software architecture, frontend, web development, product strategy, thiago fons, tech blog"
+    },
+    "hero": {
+        "title": "Software Engineering. <br /> With a product vision.",
+        "slogan": "Where technology meets product strategy. A blog about building high-quality software that drives real business results.",
+        "cta": {
+            "blog": "Explore Articles",
+            "about": "About Me"
+        }
+    },
+    "manifesto": {
+        "title": "Hi, I'm Thiago. And this isn't just another tech blog.",
+        "paragraphs": [
+            "In today's market, writing code is not enough. The most innovative companies need engineers who think like product owners: who understand the <em>why</em> behind the <em>what</em> and know how technical decisions impact business growth.",
+            "I created this space to share what I've learned building and scaling digital products, connecting engineering theory with market practice."
+        ]
+    },
+    "pillars": {
+        "title": "Core Topics",
+        "list": [
+            {
+                "title": "Software Architecture",
+                "description": "Patterns and practices for creating robust, scalable, and maintainable systems."
+            },
+            {
+                "title": "Frontend Engineering",
+                "description": "How to build fast, accessible, and memorable user experiences."
+            },
+            {
+                "title": "Product Strategy",
+                "description": "The crucial connection between engineering decisions and business goals."
+            }
+        ]
+    },
+    "featured": {
+        "title": "Recent Articles",
+        "description": "Explore the latest discussions and tutorials from the world of software development.",
+        "cta": "View all posts"
+    }
+}

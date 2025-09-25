@@ -1,0 +1,10 @@
+{
+    "title": "Exemplo de Componente",
+    "description": "Abaixo está um exemplo de componente reutilizável que pode ser integrado em qualquer página. Este componente é construído com Svelte e demonstra como passar traduções como propriedades para renderização dinâmica de conteúdo.",
+    "framework": "Este é um componente {{framework}}",
+    "body": {
+        "multiply": "Multiplique <b>{{value}}</b> por 2",
+        "increment": "Incrementar",
+        "decrement": "Decrementar"
+    }
+}

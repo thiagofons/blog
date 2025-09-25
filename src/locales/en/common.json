@@ -1,0 +1,33 @@
+{
+    "menu": {
+        "list": {
+            "home": "Home",
+            "about": "About",
+            "pages": "Pages",
+            "blog": "Blog",
+            "contact": "Contact"
+        },
+        "languagesText": {
+            "selectLanguage": "Select Language"
+        },
+        "languages": {
+            "en": "English",
+            "pt": "Portuguese"
+        }
+    },
+    "footer": {
+        "description": "Software engineering for the modern web",
+        "name": "Thiago Arruda",
+        "copy": "Copyright",
+        "made": "Made with {{what}}",
+        "index": "Table of Contents"
+    },
+    "pageNotFound": {
+        "head": {
+            "title": "🔍 404",
+            "description": "Oops! This page went on vacation"
+        },
+        "title": "🔍 404 - Oops! This page went on vacation",
+        "link": "Back to homepage"
+    }
+}

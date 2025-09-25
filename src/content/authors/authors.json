@@ -1,0 +1,11 @@
+[
+    {
+        "id": "Thiago Arruda",
+        "name": "Thiago Arruda",
+        "image": "./thiago.jpg",
+        "position": {
+            "en": "Software Engineer",
+            "pt": "Engenheiro de Software"
+        }
+    }
+]

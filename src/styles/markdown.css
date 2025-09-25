@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/* [CORREÇÃO] Importando a família de fontes correta: Source Serif Pro.
+   Recomendo fortemente baixar este arquivo e auto-hospedar para melhor performance. */
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,700;1,8..60,400;1,8..60,700&display=swap');
+
+@theme {
+    --color-main: #111111;
+    --color-primary: #6c24d8;
+}
+
+#md-content {
+    /* [MUDANÇA] Aumentando o espaçamento vertical entre os títulos e o conteúdo anterior. */
+    h2 {
+        @apply text-3xl md:text-4xl font-bold mb-4 mt-12 break-words;
+    }
+
+    h3 {
+        @apply text-2xl md:text-3xl font-bold mb-4 mt-10 break-words;
+    }
+
+    h4 {
+        @apply text-xl md:text-2xl font-bold mb-4 mt-8 break-words;
+    }
+
+    h5,
+    h6 {
+        @apply text-lg font-bold mb-4 mt-8 break-words;
+    }
+
+    /* [PRINCIPAL MUDANÇA] Ajustes para legibilidade máxima do corpo do texto. */
+    p {
+        /* [CORREÇÃO] Usando a variável CSS para a família de fontes. */
+        font-family: 'Source Serif 4', Georgia, Cambria, "Times New Roman", Times, serif;
+        /* [MUDANÇA] Aumentando o tamanho base para 18px, muito mais confortável. */
+        @apply text-lg;
+        /* [MUDANÇA] Aumentando a altura da linha para 1.7, o que melhora drasticamente a leitura. */
+        line-height: 1.7;
+        /* [MUDANÇA] Usando um preto um pouco mais suave para reduzir o contraste excessivo. */
+        @apply mb-6 text-main/90;
+    }
+
+    blockquote {
+        @apply bg-primary/10 border-l-2 border-primary pl-6 py-4 text-primary font-medium my-8;
+        p {
+            @apply mb-0 text-lg;
+            line-height: 1.7;
+        }
+    }
+
+    ol {
+        @apply list-decimal space-y-2 my-8;
+        li {
+            @apply ml-8 pl-2;
+        }
+    }
+
+    ul {
+        @apply list-disc space-y-2 my-8;
+        li {
+            @apply ml-8 pl-2;
+        }
+    }
+
+    a {
+        @apply underline text-primary;
+    }
+
+    .astro-code {
+        /* [MUDANÇA] Aumentando o tamanho da fonte do código para melhor legibilidade. */
+        @apply bg-black/10 p-4 rounded-xl font-mono my-8 text-base w-full;
+    }
+
+    table {
+        @apply w-full border border-black/10 my-8;
+
+        th {
+            @apply border border-black/10 bg-black/5 text-left p-3;
+        }
+
+        td {
+            @apply border border-black/10 p-3;
+        }
+    }
+
+    code:not(pre code) {
+        @apply bg-primary/10 px-1.5 py-1 rounded-md font-mono text-wrap;
+        /* [MUDANÇA] Ajustando para um tamanho mais proporcional ao texto base. */
+        font-size: 0.9em;
+    }
+}

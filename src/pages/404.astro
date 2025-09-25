@@ -1,0 +1,29 @@
+---
+import {
+    useTranslatedPath,
+    getLangFromUrl,
+    useTranslations,
+} from "@i18n/utils";
+
+import Base from "@layouts/Base.astro";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+---
+
+<Base
+    title={t("pageNotFound.head.title")}
+    meta={{
+        description: t("pageNotFound:head.description"),
+    }}
+>
+    <section>
+        <h1>{t("pageNotFound.title")}</h1>
+        <div class="flex mt-16 justify-center">
+            <a href={translatePath("/")} class="button"
+                >{t("pageNotFound.link")} →</a
+            >
+        </div>
+    </section>
+</Base>

@@ -1,0 +1,22 @@
+{
+    "head": {
+        "title": "Fale Conosco",
+        "description": "Exemplo de página de contato.",
+        "keywords": "astro, i18n, starter, astro i18n, contato, fale conosco, e-mail, telefone"
+    },
+    "title": "Vamos começar uma conversa",
+    "subtitle": "Envie uma mensagem",
+    "description": "Tem uma pergunta, uma ideia de projeto ou só quer dizer oi? Adoraríamos ouvir você. Envie uma mensagem e retornaremos o mais rápido possível.",
+    "unlocalized": "Página de exemplo: o URL aqui não é localizado e permanece o mesmo em todos os idiomas.",
+    "form": {
+        "name": "Seu nome",
+        "email": "Endereço de e-mail",
+        "message": "Sua mensagem",
+        "placeholder": {
+            "name": "Seu nome...",
+            "email": "Endereço de e-mail...",
+            "message": "Conte sobre seu projeto, dúvida ou apenas diga oi..."
+        },
+        "submit": "Enviar mensagem"
+    }
+}

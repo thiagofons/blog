@@ -1,0 +1,33 @@
+{
+    "menu": {
+        "list": {
+            "home": "Início",
+            "about": "Sobre",
+            "pages": "Páginas",
+            "blog": "Blog",
+            "contact": "Contato"
+        },
+        "languagesText": {
+            "selectLanguage": "Selecionar idioma"
+        },
+        "languages": {
+            "en": "Inglês",
+            "pt": "Português"
+        }
+    },
+    "footer": {
+        "description": "Engenharia de software para a web moderna",
+        "name": "Thiago Arruda",
+        "copy": "Direitos autorais",
+        "made": "Feito com {{what}}",
+        "index": "Índice"
+    },
+    "pageNotFound": {
+        "head": {
+            "title": "🔍 404",
+            "description": "Ops! Esta página saiu de férias"
+        },
+        "title": "🔍 404 - Ops! Esta página saiu de férias",
+        "link": "Voltar para a página inicial"
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "name": "blog",
+    "private": true,
+    "version": "1.1.0",
+    "type": "module",
+    "description": "This is where I post my technical thoughts",
+    "author": {
+        "name": "Thiago Arruda",
+        "url": "https://thiagofons.com"
+    },
+    "homepage": "https://thiagofons.com",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/thiagofons/blog"
+    },
+    "license": "MIT",
+    "keywords": [
+        "astro",
+        "i18n",
+        "internationalization",
+        "multilingual",
+        "url-localization",
+        "seo",
+        "tailwindcss",
+        "static-site-generator"
+    ],
+    "scripts": {
+        "dev": "astro dev",
+        "build": "astro build",
+        "preview": "astro preview",
+        "astro": "astro"
+    },
+    "dependencies": {
+        "@astrojs/mdx": "^4.3.5",
+        "@astrojs/sitemap": "^3.6.0",
+        "@astrojs/svelte": "^7.1.1",
+        "@astrojs/vercel": "^8.2.8",
+        "@tailwindcss/vite": "^4.1.13",
+        "astro": "^5.13.9",
+        "sharp": "^0.34.4",
+        "svelte": "^5.39.3",
+        "tailwindcss": "^4.1.13",
+        "typescript": "^5.9.2"
+    }
+}
