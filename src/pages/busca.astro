@@ -1,0 +1,383 @@
+---
+import Layout from "../components/Layout.astro";
+import Heading from "../components/Heading.astro";
+---
+
+<Layout title="Busca — Thiago Fonseca" description="Arquivo e busca de artigos do blog.">
+  <section class="search-page">
+    <header class="search-header">
+      <Heading as="h1">Busca</Heading>
+      <p class="search-subtitle">Arquivo de textos por data e pesquisa por palavra-chave.</p>
+    </header>
+
+    <div class="search-grid">
+      <aside class="search-archive">
+        <h2>Arquivo</h2>
+        <ul id="archive-list" class="archive-list"></ul>
+      </aside>
+
+      <div class="search-main">
+        <div class="search-input-wrap">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Buscar artigos..."
+            autocomplete="off"
+            autofocus
+          />
+        </div>
+
+        <ul id="search-results" class="search-results"></ul>
+        <p id="search-empty" class="search-empty" hidden>Nenhum artigo encontrado.</p>
+        <p id="search-no-posts" class="search-empty" hidden>Ainda não existem artigos publicados.</p>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  interface SearchEntry {
+    slug: string;
+    title: string;
+    description: string;
+    date: string;
+    yearMonth: string;
+    body: string;
+  }
+
+  interface ArchiveBucket {
+    key: string;
+    label: string;
+    count: number;
+  }
+
+  let index: SearchEntry[] = [];
+  let loaded = false;
+
+  const input = document.getElementById("search-input") as HTMLInputElement;
+  const resultsList = document.getElementById("search-results") as HTMLUListElement;
+  const emptyMsg = document.getElementById("search-empty") as HTMLParagraphElement;
+  const noPostsMsg = document.getElementById("search-no-posts") as HTMLParagraphElement;
+  const archiveList = document.getElementById("archive-list") as HTMLUListElement;
+
+  let selectedMonth: string | null = null;
+
+  async function loadIndex(): Promise<void> {
+    if (loaded) return;
+    const res = await fetch("/search-index.json");
+    index = await res.json();
+    loaded = true;
+  }
+
+  function formatMonthLabel(yearMonth: string): string {
+    const [year, month] = yearMonth.split("-").map(Number);
+    const label = new Date(year, month - 1, 1).toLocaleDateString("pt-BR", {
+      month: "long",
+      year: "numeric",
+    });
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  }
+
+  function getArchiveBuckets(entries: SearchEntry[]): ArchiveBucket[] {
+    const counts = new Map<string, number>();
+    for (const entry of entries) {
+      counts.set(entry.yearMonth, (counts.get(entry.yearMonth) ?? 0) + 1);
+    }
+    return [...counts.entries()]
+      .sort((a, b) => (a[0] > b[0] ? -1 : 1))
+      .map(([key, count]) => ({ key, count, label: formatMonthLabel(key) }));
+  }
+
+  function buildQuery(query: string): SearchEntry[] {
+    const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+
+    return index.filter((entry) => {
+      const haystack = `${entry.title} ${entry.description} ${entry.body}`.toLowerCase();
+      const textMatch = terms.length === 0 || terms.every((term) => haystack.includes(term));
+      const monthMatch = !selectedMonth || entry.yearMonth === selectedMonth;
+      return textMatch && monthMatch;
+    });
+  }
+
+  function formatDate(iso: string): string {
+    return new Date(iso).toLocaleDateString("pt-BR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    });
+  }
+
+  function escapeHtml(str: string): string {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function updateUrlState(query: string): void {
+    const params = new URLSearchParams(window.location.search);
+    if (query.trim()) params.set("q", query.trim());
+    else params.delete("q");
+
+    if (selectedMonth) params.set("mes", selectedMonth);
+    else params.delete("mes");
+
+    const next = params.toString();
+    const nextUrl = next ? `/busca?${next}` : "/busca";
+    window.history.replaceState({}, "", nextUrl);
+  }
+
+  function renderArchive(buckets: ArchiveBucket[]): void {
+    archiveList.innerHTML = "";
+
+    const allLi = document.createElement("li");
+    const allBtn = document.createElement("button");
+    allBtn.type = "button";
+    allBtn.className = `archive-btn ${selectedMonth === null ? "active" : ""}`;
+    allBtn.textContent = `Todos (${index.length})`;
+    allBtn.addEventListener("click", () => {
+      selectedMonth = null;
+      render(input.value);
+    });
+    allLi.appendChild(allBtn);
+    archiveList.appendChild(allLi);
+
+    for (const bucket of buckets) {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = `archive-btn ${selectedMonth === bucket.key ? "active" : ""}`;
+      btn.textContent = `${bucket.label} (${bucket.count})`;
+      btn.addEventListener("click", () => {
+        selectedMonth = selectedMonth === bucket.key ? null : bucket.key;
+        render(input.value);
+      });
+      li.appendChild(btn);
+      archiveList.appendChild(li);
+    }
+  }
+
+  function render(query: string): void {
+    const buckets = getArchiveBuckets(index);
+    renderArchive(buckets);
+
+    resultsList.innerHTML = "";
+    noPostsMsg.hidden = index.length !== 0;
+
+    if (index.length === 0) {
+      emptyMsg.hidden = true;
+      return;
+    }
+
+    const results = buildQuery(query);
+    updateUrlState(query);
+
+    if (results.length === 0) {
+      emptyMsg.hidden = false;
+      return;
+    }
+
+    emptyMsg.hidden = true;
+
+    for (const entry of results) {
+      const li = document.createElement("li");
+      li.className = "search-result-item";
+      li.innerHTML = `
+        <a href="/artigos/${encodeURIComponent(entry.slug)}">
+          <span class="result-title">${escapeHtml(entry.title)}</span>
+          <span class="result-description">${escapeHtml(entry.description)}</span>
+          <time class="result-date" datetime="${escapeHtml(entry.date)}">${formatDate(entry.date)}</time>
+        </a>
+      `;
+      resultsList.appendChild(li);
+    }
+  }
+
+  let debounceTimer: ReturnType<typeof setTimeout>;
+
+  input.addEventListener("input", () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      render(input.value);
+    }, 180);
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  const initialQuery = params.get("q") ?? "";
+  const initialMonth = params.get("mes");
+
+  loadIndex().then(() => {
+    if (initialMonth && /^\d{4}-\d{2}$/.test(initialMonth)) {
+      selectedMonth = initialMonth;
+    }
+    input.value = initialQuery;
+    render(initialQuery);
+  });
+</script>
+
+<style>
+  .search-page {
+    max-width: var(--width-content);
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .search-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .search-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+  }
+
+  .search-grid {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .search-archive h2 {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: var(--space-sm);
+  }
+
+  .archive-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  :global(.archive-btn) {
+    border: 1px solid var(--color-border);
+    background: var(--color-pill-bg);
+    text-align: left;
+    padding: 0.24rem 0.72rem;
+    border-radius: 999px;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  :global(.archive-btn:hover) {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-border) 65%, #b9b3a5 35%);
+    background: #ece4d3;
+  }
+
+  :global(.archive-btn.active) {
+    color: var(--color-bg);
+    border-color: var(--color-text);
+    background: var(--color-text);
+  }
+
+  .search-input-wrap {
+    margin-bottom: var(--space-lg);
+  }
+
+  #search-input {
+    width: 100%;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  #search-input:focus {
+    border-color: var(--color-text-tertiary);
+  }
+
+  :global(.search-results) {
+    list-style: none;
+    padding: 0;
+  }
+
+  :global(.search-result-item) {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  :global(.search-result-item:first-child) {
+    border-top: 1px solid var(--color-border);
+  }
+
+  :global(.search-result-item a) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-lg) 0;
+    text-decoration: none;
+    color: var(--color-text);
+  }
+
+  :global(.search-result-item a:hover .result-title) {
+    color: var(--color-text-secondary);
+  }
+
+  :global(.result-title) {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    transition: color 0.15s ease;
+  }
+
+  :global(.result-description) {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    margin-top: 0.15rem;
+  }
+
+  :global(.result-date) {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    margin-top: 0.45rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .search-empty {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    color: var(--color-text-tertiary);
+  }
+
+  @media (max-width: 900px) {
+    .search-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+
+    .archive-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      column-gap: var(--space-sm);
+    }
+  }
+</style>

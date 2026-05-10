@@ -1,0 +1,44 @@
+---
+import Layout from "../components/Layout.astro";
+import Heading from "../components/Heading.astro";
+import Prose from "../components/Prose.astro";
+---
+
+<Layout title="Sobre — Thiago Fonseca" description="Sobre o blog de Thiago Fonseca.">
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "Sobre Thiago Fonseca",
+    "description": "Sobre o blog de Thiago Fonseca.",
+    "url": new URL("/sobre", Astro.site).href,
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Thiago Fonseca",
+      "url": Astro.site?.href,
+    },
+  })} />
+  <section class="about">
+    <Heading as="h1">Sobre</Heading>
+    <Prose>
+      <p>
+        Este é um espaço de escrita sobre sistemas, decisões de produto e o trabalho
+        de construir software com clareza.
+      </p>
+      <p>
+        A proposta é simples: publicar textos úteis, sem ruído, sem distrações e
+        sem mecânicas de atenção.
+      </p>
+      <p>
+        Sem pop-ups, sem autoplay, sem pressão. Apenas leitura.
+      </p>
+    </Prose>
+  </section>
+</Layout>
+
+<style>
+  .about {
+    max-width: var(--width-content);
+    width: 100%;
+    margin: 0 auto;
+  }
+</style>

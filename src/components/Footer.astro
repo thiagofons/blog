@@ -3,7 +3,7 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <p>&copy; {year} UINUX. All rights reserved.</p>
+  <p>&copy; {year} Thiago Fonseca. Todos os direitos reservados.</p>
 </footer>
 
 <style>
@@ -11,11 +11,16 @@ const year = new Date().getFullYear();
     margin-top: var(--space-2xl);
     padding: var(--space-lg) 0;
     border-top: 1px solid var(--color-border);
+    max-width: var(--width-content);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .footer p {
     font-family: var(--font-heading);
     font-size: 0.75rem;
+    font-weight: 500;
     color: var(--color-text-tertiary);
   }
 </style>

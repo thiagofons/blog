@@ -1,11 +1,11 @@
 ---
-import Layout from "../components/Layout.astro";
-import Heading from "../components/Heading.astro";
 import { getCollection } from "astro:content";
+import Heading from "../components/Heading.astro";
+import Layout from "../components/Layout.astro";
 
 const PAGE_SIZE = 10;
 
-const allPosts = (await getCollection("posts")).sort(
+const allPosts = (await getCollection("posts")).filter((post) => !post.data.draft).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 
@@ -13,50 +13,50 @@ const posts = allPosts.slice(0, PAGE_SIZE);
 const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
 ---
 
-<Layout title="UINUX Blog">
+<Layout title="Thiago Fonseca" description="Textos sobre sistemas, escrita e construção de produtos digitais.">
   <script slot="head" type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "UINUX Blog",
-    "description": "Writing about systems, design, and building with restraint.",
+    "name": "Thiago Fonseca",
+    "description": "Textos sobre sistemas, escrita e construção de produtos digitais.",
     "url": Astro.site?.href,
   })} />
   <section class="home">
     <header class="home-header">
-      <Heading as="h1">UINUX Blog</Heading>
-      <p class="home-tagline">Writing about systems, design, and building with restraint.</p>
+      <Heading as="h1">Thiago Fonseca</Heading>
+      <p class="home-tagline">Textos sobre sistemas, escrita e construção de produtos digitais.</p>
     </header>
-    <ul class="post-list">
-      {
-        posts.map((post) => {
-          const formattedDate = post.data.date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          });
-          return (
-            <li class="post-item">
-              <a href={`/posts/${post.id}`}>
-                <span class="post-title">{post.data.title}</span>
-                <span class="post-description">{post.data.description}</span>
-                <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
-              </a>
-              {post.data.tags.length > 0 && (
-                <div class="post-tags">
-                  {post.data.tags.map((tag) => (
-                    <a href={`/tags/${tag}`} class="tag">{tag}</a>
-                  ))}
-                </div>
-              )}
-            </li>
-          );
-        })
-      }
-    </ul>
+
+    {posts.length === 0 ? (
+      <p class="empty">Nenhum artigo publicado ainda.</p>
+    ) : (
+      <ul class="post-list">
+        {
+          posts.map((post) => {
+            const formattedDate = post.data.date.toLocaleDateString("pt-BR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              timeZone: "UTC",
+            });
+            return (
+              <li class="post-item">
+                <a href={`/artigos/${post.id}`}>
+                  <span class="post-title">{post.data.title}</span>
+                  <span class="post-description">{post.data.description}</span>
+                  <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    )}
+
     {totalPages > 1 && (
-      <nav class="pagination" aria-label="Pagination">
-        <span class="pagination-info">Page 1 of {totalPages}</span>
-        <a href="/page/2" class="pagination-link">Older &rarr;</a>
+      <nav class="pagination" aria-label="Paginação">
+        <span class="pagination-info">Página 1 de {totalPages}</span>
+        <a href="/pagina/2" class="pagination-link">Mais antigos &rarr;</a>
       </nav>
     )}
   </section>
@@ -65,6 +65,8 @@ const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
 <style>
   .home {
     max-width: var(--width-content);
+    width: 100%;
+    margin: 0 auto;
   }
 
   .home-header {
@@ -78,17 +80,23 @@ const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
     margin-top: var(--space-sm);
   }
 
+  .empty {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    color: var(--color-text-tertiary);
+  }
+
   .post-list {
     list-style: none;
     padding: 0;
   }
 
   .post-item {
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, #b9b3a5 30%);
   }
 
   .post-item:first-child {
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, #b9b3a5 30%);
   }
 
   .post-item a {
@@ -101,10 +109,6 @@ const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
     color: var(--color-text);
   }
 
-  .post-item:has(.post-tags) a {
-    padding-bottom: var(--space-sm);
-  }
-
   .post-item a:hover .post-title {
     color: var(--color-text-secondary);
   }
@@ -112,7 +116,7 @@ const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
   .post-title {
     font-family: var(--font-heading);
     font-size: 1.125rem;
-    font-weight: 600;
+    font-weight: 500;
     letter-spacing: -0.01em;
     line-height: 1.3;
     transition: color 0.15s ease;
@@ -120,7 +124,7 @@ const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
 
   .post-description {
     font-family: var(--font-body);
-    font-size: 0.9375rem;
+    font-size: 0.95rem;
     color: var(--color-text-secondary);
     line-height: 1.5;
   }
@@ -128,31 +132,9 @@ const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
   .post-item time {
     font-family: var(--font-heading);
     font-size: 0.75rem;
+    font-weight: 500;
     color: var(--color-text-tertiary);
     margin-top: var(--space-xs);
-  }
-
-  .post-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xs);
-    padding-bottom: var(--space-lg);
-  }
-
-  .tag {
-    font-family: var(--font-heading);
-    font-size: 0.6875rem;
-    color: var(--color-text-tertiary);
-    text-decoration: none;
-    border: 1px solid var(--color-border);
-    padding: 0.0625rem 0.375rem;
-    border-radius: 3px;
-    transition: color 0.15s ease, border-color 0.15s ease;
-  }
-
-  .tag:hover {
-    color: var(--color-text);
-    border-color: var(--color-text-tertiary);
   }
 
   .pagination {
@@ -163,20 +145,16 @@ const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
     padding-top: var(--space-lg);
   }
 
-  .pagination-link {
+  .pagination-link,
+  .pagination-info {
     font-family: var(--font-heading);
     font-size: 0.8125rem;
+    font-weight: 500;
     color: var(--color-text-secondary);
     text-decoration: none;
   }
 
   .pagination-link:hover {
     color: var(--color-text);
-  }
-
-  .pagination-info {
-    font-family: var(--font-heading);
-    font-size: 0.75rem;
-    color: var(--color-text-tertiary);
   }
 </style>

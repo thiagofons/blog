@@ -2,30 +2,162 @@
 const currentPath = Astro.url.pathname;
 ---
 
-<nav class="nav">
-  <a href="/" class="nav-brand">UINUX Blog</a>
+<nav class="nav" data-mobile-open="false">
+  <a href="/" class="nav-brand">Thiago Fonseca</a>
+
   <div class="nav-links">
-    <a href="/tags" class:list={[{ active: currentPath.startsWith("/tags") }]}>Tags</a>
-    <a href="/search" class:list={[{ active: currentPath === "/search" || currentPath === "/search/" }]}>Search</a>
-    <a href="/about" class:list={[{ active: currentPath === "/about" || currentPath === "/about/" }]}>About</a>
+    <a
+      href="/busca"
+      aria-label="Buscar"
+      title="Buscar"
+      class:list={["search-icon-link", { active: currentPath === "/busca" || currentPath === "/busca/" }]}
+    >
+      <i class="ri-search-line" aria-hidden="true"></i>
+    </a>
+    <a href="/sobre" class:list={[{ active: currentPath === "/sobre" || currentPath === "/sobre/" }]}>Sobre</a>
     <a href="/rss.xml">RSS</a>
   </div>
+
+  <button class="mobile-menu-trigger" aria-label="Abrir menu" title="Menu" aria-expanded="false" aria-controls="mobile-menu-panel" type="button">
+    <span class="mobile-menu-icon" aria-hidden="true">
+      <i class="ri-menu-line icon-menu"></i>
+      <i class="ri-close-line icon-close"></i>
+    </span>
+  </button>
+
+  <div class="mobile-menu-backdrop" hidden></div>
+
+  <nav id="mobile-menu-panel" class="mobile-menu-panel" aria-label="Menu mobile" hidden>
+    <a href="/busca" class:list={[{ active: currentPath === "/busca" || currentPath === "/busca/" }]}>
+      <i class="ri-search-line" aria-hidden="true"></i>
+      Busca
+    </a>
+    <a href="/sobre" class:list={[{ active: currentPath === "/sobre" || currentPath === "/sobre/" }]}>Sobre</a>
+    <a href="/rss.xml">RSS</a>
+  </nav>
 </nav>
+
+<script type="module">
+  let animateElement = (element, keyframes, options) => {
+    const animation = element.animate(keyframes, options);
+    return { finished: animation.finished };
+  };
+
+  import("motion")
+    .then((mod) => {
+      if (typeof mod.animate === "function") {
+        animateElement = mod.animate;
+      }
+    })
+    .catch(() => {
+      // Keep native Web Animations fallback.
+    });
+
+  function initMobileMenu() {
+    const nav = document.querySelector(".nav");
+    if (!nav) return;
+
+    const trigger = nav.querySelector(".mobile-menu-trigger");
+    const panel = nav.querySelector(".mobile-menu-panel");
+    const backdrop = nav.querySelector(".mobile-menu-backdrop");
+    if (!trigger || !panel || !backdrop) return;
+
+    let isOpen = false;
+
+    function setOpen(next) {
+      isOpen = next;
+      nav.setAttribute("data-mobile-open", next ? "true" : "false");
+      trigger.setAttribute("aria-expanded", next ? "true" : "false");
+    }
+
+    function openMenu() {
+      if (isOpen) return;
+      panel.hidden = false;
+      backdrop.hidden = false;
+      setOpen(true);
+
+      animateElement(backdrop, { opacity: [0, 1] }, { duration: 200, easing: "ease-out", fill: "forwards" });
+      animateElement(
+        panel,
+        { transform: ["translateX(100%)", "translateX(0%)"], opacity: [0.7, 1] },
+        { duration: 260, easing: "ease-out", fill: "forwards" }
+      );
+    }
+
+    function closeMenu() {
+      if (!isOpen) return;
+      setOpen(false);
+
+      const panelAnim = animateElement(
+        panel,
+        { transform: ["translateX(0%)", "translateX(100%)"], opacity: [1, 0.7] },
+        { duration: 220, easing: "ease-in", fill: "forwards" }
+      );
+      const backdropAnim = animateElement(
+        backdrop,
+        { opacity: [1, 0] },
+        { duration: 180, easing: "ease-in", fill: "forwards" }
+      );
+
+      Promise.all([panelAnim.finished, backdropAnim.finished]).then(() => {
+        if (!isOpen) {
+          panel.hidden = true;
+          backdrop.hidden = true;
+        }
+      });
+    }
+
+    trigger.addEventListener("click", () => {
+      if (isOpen) closeMenu();
+      else openMenu();
+    });
+
+    backdrop.addEventListener("click", closeMenu);
+
+    document.addEventListener("click", (event) => {
+      if (!isOpen) return;
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (!nav.contains(target)) closeMenu();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMenu();
+    });
+
+    panel.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.matchMedia("(min-width: 701px)").matches) closeMenu();
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMobileMenu, { once: true });
+  } else {
+    initMobileMenu();
+  }
+</script>
 
 <style>
   .nav {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    max-width: var(--width-content);
+    margin: 0 auto var(--space-2xl);
+    width: 100%;
     padding: var(--space-lg) 0;
     border-bottom: 1px solid var(--color-border);
-    margin-bottom: var(--space-2xl);
+    position: relative;
   }
 
   .nav-brand {
     font-family: var(--font-heading);
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 500;
     letter-spacing: -0.01em;
     text-decoration: none;
     color: var(--color-text);
@@ -37,12 +169,14 @@ const currentPath = Astro.url.pathname;
 
   .nav-links {
     display: flex;
+    align-items: center;
     gap: var(--space-lg);
   }
 
   .nav-links a {
     font-family: var(--font-heading);
     font-size: 0.8125rem;
+    font-weight: 500;
     color: var(--color-text-secondary);
     text-decoration: none;
   }
@@ -50,5 +184,128 @@ const currentPath = Astro.url.pathname;
   .nav-links a:hover,
   .nav-links a.active {
     color: var(--color-text);
+  }
+
+  .search-icon-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .search-icon-link :global(i) {
+    font-size: 1.05rem;
+    line-height: 1;
+    vertical-align: middle;
+  }
+
+  .mobile-menu-trigger,
+  .mobile-menu-panel,
+  .mobile-menu-backdrop {
+    display: none;
+  }
+
+  @media (max-width: 700px) {
+    .nav {
+      align-items: center;
+    }
+
+    .nav-links {
+      display: none;
+    }
+
+    .mobile-menu-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.6rem;
+      height: 1.6rem;
+      border: none;
+      background: transparent;
+      color: var(--color-text);
+      cursor: pointer;
+      margin-left: auto;
+      z-index: 42;
+      padding: 0;
+    }
+
+    .mobile-menu-icon {
+      position: relative;
+      width: 1.1rem;
+      height: 1.1rem;
+      display: inline-block;
+    }
+
+    .mobile-menu-icon :global(i) {
+      position: absolute;
+      inset: 0;
+      font-size: 1.1rem;
+      line-height: 1.1rem;
+      transform-origin: center;
+      transition: transform 0.22s ease, opacity 0.22s ease;
+    }
+
+    .mobile-menu-icon :global(.icon-menu) {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    .mobile-menu-icon :global(.icon-close) {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.7);
+    }
+
+    .nav[data-mobile-open="true"] .mobile-menu-icon :global(.icon-menu) {
+      opacity: 0;
+      transform: rotate(90deg) scale(0.7);
+    }
+
+    .nav[data-mobile-open="true"] .mobile-menu-icon :global(.icon-close) {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    .mobile-menu-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 18, 12, 0.28);
+      backdrop-filter: blur(1px);
+      z-index: 40;
+      opacity: 0;
+    }
+
+    .mobile-menu-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(320px, 86vw);
+      height: 100vh;
+      background: var(--color-surface);
+      border-left: 1px solid var(--color-border);
+      z-index: 41;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      padding: 5.5rem 1.4rem 1.4rem;
+      transform: translateX(100%);
+      opacity: 0.7;
+    }
+
+    .mobile-menu-panel a {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      width: fit-content;
+    }
+
+    .mobile-menu-panel a:hover,
+    .mobile-menu-panel a.active {
+      color: var(--color-text);
+    }
   }
 </style>
