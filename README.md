@@ -1,196 +1,115 @@
-# UINUX Blog
+# Thiago Blog
 
-A calm, writing-first blogging system built with Astro.
+Blog estático em Astro com dois fluxos de conteúdo:
 
-## What it is
+- `posts`: artigos autorais publicados em `/` e `/artigos/...`
+- `links`: links salvos/referências publicados em `/links`
 
-UINUX Blog is a static blog system designed for long-form writing. It prioritizes typography, whitespace, and readability over visual complexity. It uses Markdown for content, file-based routing, and ships minimal client-side JavaScript (search only).
+## Requisitos
 
-## Quick start (template users)
+- Node.js 18+
+- npm
 
-If you clicked "Use this template" on GitHub:
+## Rodando localmente
 
-1. Clone your new repository
-2. Run `npm install`
-3. Delete the example posts in `src/content/posts/`
-4. Update `astro.config.mjs` with your own `site` URL
-5. Update the blog name and tagline in `src/pages/index.astro` and `src/components/Nav.astro`
-6. Update `src/pages/about.astro` with your own info
-7. Run `npm run dev` and start writing
-
-## What it is not
-
-- Not a theme. There are no color presets, dark mode toggles, or visual variants.
-- Not a CMS. There is no admin panel, no database, no integrations.
-- Not a marketing tool. There are no newsletter signups, analytics, or growth hacks.
-- Not a portfolio. There are no image galleries, project showcases, or landing pages.
-
-## Who it is for
-
-Writers who want a quiet place to publish. People who value clarity over features. Anyone who prefers to write in Markdown and deploy a static site.
-
-## Getting started
-
-### Prerequisites
-
-- Node.js 18 or later
-
-### Install
-
-```
+```bash
 npm install
-```
-
-### Start writing
-
-1. Create a new `.md` or `.mdx` file in `src/content/posts/`
-2. Add frontmatter:
-
-```md
----
-title: "Your Post Title"
-description: "A short description of the post."
-date: 2026-02-07
-tags: ["topic-a", "topic-b"]
----
-
-Your content here.
-```
-
-3. Run the dev server:
-
-```
 npm run dev
 ```
 
-4. Open `http://localhost:4321`
+Acesse `http://localhost:4321`.
 
-That is it. You are writing.
+## Build de produção
 
-### Google Search Console
-
-To enable Google Search Console verification, create a `.env` file:
-
-```
-PUBLIC_GOOGLE_SITE_VERIFICATION=your-verification-code
-```
-
-Get the code from Google Search Console > Settings > Ownership verification > HTML tag.
-
-See `.env.example` for reference.
-
-### Build for production
-
-```
+```bash
 npm run build
+npm run preview
 ```
 
-Output is in the `dist/` directory. Deploy it anywhere that serves static files.
+## Estrutura de conteúdo
 
-## Structure
+- `src/content/posts/`: posts principais (um diretório por post)
+- `src/content/links/`: links salvos
+- `src/content.config.ts`: schemas das coleções
 
-```
-src/
-  components/
-    Layout.astro      Page shell, meta, fonts
-    Nav.astro          Site navigation
-    Footer.astro       Site footer
-    Heading.astro      Typographic heading
-    Article.astro      Post wrapper with metadata and tags
-    Prose.astro        Markdown content styling
-  content/
-    config.ts          Content collection schema
-    posts/             Markdown files go here
-  pages/
-    index.astro              Home (paginated post list)
-    page/[page].astro        Paginated post listing (page 2+)
-    search.astro             Search page (client-side)
-    search-index.json.ts     Static search index (built at build time)
-    about.astro              About page
-    rss.xml.ts               RSS feed
-    tags/index.astro         All tags
-    tags/[tag].astro         Posts filtered by tag
-    posts/[...slug].astro    Individual post pages
-  styles/
-    global.css         Design tokens and base styles
+## Como escrever um post
+
+1. Crie um diretório para o post em `src/content/posts/<slug>/`.
+2. Dentro dele, crie `index.mdx`.
+3. Use este frontmatter:
+
+```md
+---
+title: "Título do post"
+description: "Resumo curto"
+date: 2026-05-10
+draft: false
+---
+
+Conteúdo do post...
 ```
 
-## Content model
+4. Para rascunho não publicado, use `draft: true`.
+5. O post publicado aparece na home, paginação, busca, RSS e página individual em `/artigos/<slug>`.
 
-Posts use these frontmatter fields:
+### Padrão recomendado por post
 
-| Field         | Type     | Required | Default |
-|---------------|----------|----------|---------|
-| `title`       | string   | yes      | —       |
-| `description` | string   | yes      | —       |
-| `date`        | date     | yes      | —       |
-| `tags`        | string[] | no       | `[]`    |
+```text
+src/content/posts/
+  meu-primeiro-post/
+    index.mdx
+    capa.jpg
+    grafico.png
+```
 
-## Features
+### Como adicionar imagens no post (local, por pasta)
 
-### Tags
+No `index.mdx`, importe a imagem e use `src`:
 
-Posts can have zero or more tags. Tags appear on post pages and the home listing. Browse all tags at `/tags` or filter by tag at `/tags/[tag-name]`.
+```mdx
+---
+title: "Meu post"
+description: "Resumo"
+date: 2026-05-10
+draft: false
+---
 
-### Pagination
+import capa from "./capa.jpg";
 
-The home page shows 10 posts per page. When there are more than 10 posts, pagination links appear at the bottom. Pages 2+ are at `/page/2`, `/page/3`, etc.
+![Capa do post](capa.src)
+```
 
-### Search
+## Como criar um link salvo
 
-Client-side search powered by a static JSON index built at build time.
+1. Crie um arquivo `.md` ou `.mdx` em `src/content/links/`.
+2. Use este frontmatter:
 
-- No external services or APIs
-- No dependencies
-- Index includes title, description, tags, and full post body
-- Debounced input with instant results
-- Supports `?q=` query parameter for direct linking
-- Available at `/search`
+```md
+---
+title: "Título da referência"
+description: "Por que esse link é relevante"
+url: "https://exemplo.com/artigo"
+date: 2026-05-10
+draft: false
+---
 
-## Design decisions
+Notas opcionais sobre o link.
+```
 
-- **Serif body text** (Newsreader): optimized for sustained reading
-- **Sans-serif headings** (Inter): clear hierarchy without competing with body text
-- **640px content width**: prevents eye fatigue on long lines
-- **Minimal client-side JS**: only used for search; all other pages are static HTML and CSS
-- **No dark mode**: one mode, one experience, no maintenance surface
-- **No component library**: six components, no more
+3. Para manter privado, use `draft: true`.
+4. Os links publicados aparecem em `/links` e não se misturam com os posts autorais.
 
-## SEO
+## Navbar
 
-Built-in, zero-dependency SEO on every page:
+A navegação principal inclui:
 
-- **Canonical URLs** on all pages
-- **Open Graph meta** (og:title, og:description, og:url, og:type, og:site_name, og:image)
-- **Twitter Card meta** (summary or summary_large_image)
-- **JSON-LD structured data**:
-  - `WebSite` on the home page
-  - `BlogPosting` on each post (headline, datePublished, author, publisher, keywords)
-  - `AboutPage` on the about page
-- **Google Search Console** verification via environment variable
-- **RSS feed** at `/rss.xml`
+- `Busca` (`/busca`)
+- `Links` (`/links`)
+- `Sobre` (`/sobre`)
+- `RSS` (`/rss.xml`)
 
-No third-party SEO libraries. No sitemap generator. No tracking.
+## Observações
 
-## Environment variables
-
-| Variable | Required | Description |
-|---|---|---|
-| `PUBLIC_GOOGLE_SITE_VERIFICATION` | no | Google Search Console verification code |
-
-## Customization checklist
-
-When using this as a template, update these files:
-
-- [ ] `astro.config.mjs` — set your `site` URL
-- [ ] `src/pages/index.astro` — update blog name and tagline
-- [ ] `src/components/Nav.astro` — update brand name
-- [ ] `src/pages/about.astro` — write your own about page
-- [ ] `src/pages/rss.xml.ts` — update feed title and description
-- [ ] `src/components/Layout.astro` — update default description and OG site_name
-- [ ] `src/content/posts/` — delete example posts, add your own
-- [ ] `.env` — add your Google Search Console code (optional)
-
-## License
-
-MIT
+- Use slugs curtos e descritivos para diretórios de posts.
+- `date` deve estar em formato `YYYY-MM-DD`.
+- Em links externos, a página `/links` já abre em nova aba por padrão.

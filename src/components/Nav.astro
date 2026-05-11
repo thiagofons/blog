@@ -3,7 +3,7 @@ const currentPath = Astro.url.pathname;
 ---
 
 <nav class="nav" data-mobile-open="false">
-  <a href="/" class="nav-brand">Thiago Fonseca</a>
+  <a href="/" class="nav-brand" draggable="false">Thiago Fonseca</a>
 
   <div class="nav-links">
     <a
@@ -14,6 +14,7 @@ const currentPath = Astro.url.pathname;
     >
       <i class="ri-search-line" aria-hidden="true"></i>
     </a>
+    <a href="/links" class:list={[{ active: currentPath === "/links" || currentPath === "/links/" }]}>Links</a>
     <a href="/sobre" class:list={[{ active: currentPath === "/sobre" || currentPath === "/sobre/" }]}>Sobre</a>
     <a href="/rss.xml">RSS</a>
   </div>
@@ -32,6 +33,7 @@ const currentPath = Astro.url.pathname;
       <i class="ri-search-line" aria-hidden="true"></i>
       Busca
     </a>
+    <a href="/links" class:list={[{ active: currentPath === "/links" || currentPath === "/links/" }]}>Links</a>
     <a href="/sobre" class:list={[{ active: currentPath === "/sobre" || currentPath === "/sobre/" }]}>Sobre</a>
     <a href="/rss.xml">RSS</a>
   </nav>
