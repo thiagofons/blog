@@ -1,15 +1,15 @@
 ---
-import Layout from "../components/Layout.astro";
 import Heading from "../components/Heading.astro";
+import Layout from "../components/Layout.astro";
 import Prose from "../components/Prose.astro";
 ---
 
-<Layout title="Sobre — Thiago Fonseca" description="Sobre o blog de Thiago Fonseca.">
+<Layout title="Sobre — Thiago Fonseca" description="Quem escreve este blog e por quê.">
   <script slot="head" type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "AboutPage",
     "name": "Sobre Thiago Fonseca",
-    "description": "Sobre o blog de Thiago Fonseca.",
+    "description": "Quem escreve este blog e por quê.",
     "url": new URL("/sobre", Astro.site).href,
     "isPartOf": {
       "@type": "WebSite",
@@ -18,20 +18,58 @@ import Prose from "../components/Prose.astro";
     },
   })} />
   <section class="about">
-    <Heading as="h1">Sobre</Heading>
-    <Prose>
-      <p>
-        Este é um espaço de escrita sobre sistemas, decisões de produto e o trabalho
-        de construir software com clareza.
+    <header class="about-header">
+      <Heading as="h1">Sobre</Heading>
+      <p class="about-tagline">
+        Uma página simples para contextualizar quem eu sou, como penso e o que você encontra aqui.
       </p>
-      <p>
-        A proposta é simples: publicar textos úteis, sem ruído, sem distrações e
-        sem mecânicas de atenção.
-      </p>
-      <p>
-        Sem pop-ups, sem autoplay, sem pressão. Apenas leitura.
-      </p>
-    </Prose>
+    </header>
+
+    <section class="about-section">
+      <h2>Resumo</h2>
+      <Prose>
+        <p>
+          Me chamo Thiago, estou terminando o curso de Ciência da Computação e, no momento,
+          estagio como engenheiro de software.
+        </p>
+      </Prose>
+    </section>
+
+    <section class="about-section">
+      <h2>O que você encontra neste blog</h2>
+      <ul class="about-list">
+        <li>Posts: textos que eu escrevo.</li>
+        <li>Links: coisas que eu salvo porque acho interessante.</li>
+      </ul>
+    </section>
+
+    <section class="about-section">
+      <h2>Como eu trabalho</h2>
+      <Prose>
+        <p>
+          Estou construindo este blog como uma alternativa à lógica BUMMER e às redes sociais,
+          com foco em leitura intencional e menos ruído.
+        </p>
+      </Prose>
+    </section>
+
+    <section class="about-section">
+      <h2>Agora</h2>
+      <Prose>
+        <p>
+          Neste momento, estou concluindo a graduação e aprofundando minha prática em engenharia
+          de software.
+        </p>
+      </Prose>
+    </section>
+
+    <section class="about-section">
+      <h2>Contato</h2>
+      <ul class="about-links">
+        <li><a href="https://github.com/thiagofons" target="_blank">GitHub</a></li>
+        <li><a href="mailto:thiagofa2506@gmail.com" target="_blank">E-mail</a></li>
+      </ul>
+    </section>
   </section>
 </Layout>
 
@@ -40,5 +78,58 @@ import Prose from "../components/Prose.astro";
     max-width: var(--width-content);
     width: 100%;
     margin: 0 auto;
+  }
+
+  .about-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .about-tagline {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-sm);
+    line-height: 1.6;
+    max-width: 65ch;
+  }
+
+  .about-section {
+    padding-top: var(--space-lg);
+    padding-bottom: var(--space-lg);
+    border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, #b9b3a5 30%);
+  }
+
+  .about-section:last-child {
+    border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, #b9b3a5 30%);
+  }
+
+  .about-section h2 {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    margin-bottom: var(--space-sm);
+  }
+
+  .about-list,
+  .about-links {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: var(--space-xs);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  .about-links a {
+    color: var(--color-link);
+    text-decoration-color: color-mix(in srgb, var(--color-link) 35%, transparent);
+    text-underline-offset: 0.15em;
+    transition: color 0.15s ease;
+  }
+
+  .about-links a:hover {
+    color: var(--color-link-hover);
   }
 </style>
