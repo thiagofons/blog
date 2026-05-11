@@ -13,18 +13,24 @@ const posts = allPosts.slice(0, PAGE_SIZE);
 const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
 ---
 
-<Layout title="Thiago Fonseca" description="Textos sobre sistemas, escrita e construção de produtos digitais.">
+<Layout title="Thiago Fonseca" description="Reflexões de um engenheiro de software em formação.">
   <script slot="head" type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Thiago Fonseca",
-    "description": "Textos sobre sistemas, escrita e construção de produtos digitais.",
+    "description": "Reflexões de um engenheiro de software em formação.",
     "url": Astro.site?.href,
+    "inLanguage": "pt-BR",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${new URL("/busca", Astro.site).href}?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
   })} />
   <section class="home">
     <header class="home-header">
       <Heading as="h1">Thiago Fonseca</Heading>
-      <p class="home-tagline">Textos sobre sistemas, escrita e construção de produtos digitais.</p>
+      <p class="home-tagline">Reflexões de um engenheiro de software em formação.</p>
     </header>
 
     {posts.length === 0 ? (

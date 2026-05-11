@@ -16,6 +16,10 @@ const { page } = Astro.props;
 ---
 
 <Layout title={`Página ${page.currentPage} — Thiago Fonseca`}>
+  <Fragment slot="head">
+    {page.url.prev && <link rel="prev" href={new URL(page.url.prev, Astro.site).href} />}
+    {page.url.next && <link rel="next" href={new URL(page.url.next, Astro.site).href} />}
+  </Fragment>
   <section class="home">
     <header class="home-header">
       <Heading as="h1">Thiago Fonseca</Heading>
